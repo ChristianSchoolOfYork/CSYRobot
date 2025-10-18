@@ -11,7 +11,11 @@ buildscript {
     }
     dependencies {
         // Note for FTC Teams: Do not modify this yourself.
+<<<<<<< HEAD
         classpath 'com.android.tools.build:gradle:8.12.1'
+=======
+        classpath 'com.android.tools.build:gradle:8.13.0'
+>>>>>>> c374d04 (Fix update the gradle build)
     }
 }
 
