@@ -64,9 +64,11 @@ public final class MecanumDrive {
 
         // drive model parameters
         public double inPerTick = 0.00197932702881020453045964372113;
-        public double lateralInPerTick = 0.0010843501025928647;
-        public double trackWidthTicks = 444974.23267423373;
-
+        public double lateralInPerTick =  inPerTick; // 0.0010843501025928647;
+       // public double trackWidthTicks = 444974.23267423373;
+       // public double trackWidthTicks = 453635.7468183678;
+        public double trackWidthTicks = 8083.555555555556;
+        public String pinpointDeviceName = "pinpoint";
 
         // feedforward parameters (in tick units)
         public double kS = 0.4119901; //Std deviation: 0.0000014663 Avg: 0.6219901
@@ -85,7 +87,7 @@ public final class MecanumDrive {
         // path controller gains
         public double axialGain = 0;
         public double lateralGain = 0;
-        public double headingGain = 0; // shared with turn
+        public double headingGain = 2; // shared with turn
 
         public double axialVelGain = 0;
         public double lateralVelGain = 0;
