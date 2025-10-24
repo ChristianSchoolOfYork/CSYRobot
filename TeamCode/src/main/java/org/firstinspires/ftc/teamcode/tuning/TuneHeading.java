@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Rotation2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -81,7 +82,7 @@ public class TuneHeading extends LinearOpMode {
                 }
 
                 plan = drive.actionBuilder(currentPose)
-                        .turn(Math.toRadians(90))
+                        .splineTo(new Vector2d(-48, -48), Math.toRadians(0))
                         .build();
 
                 isPressed = true;
