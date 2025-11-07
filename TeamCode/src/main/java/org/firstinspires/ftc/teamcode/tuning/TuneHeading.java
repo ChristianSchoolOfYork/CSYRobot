@@ -46,7 +46,7 @@ public class TuneHeading extends LinearOpMode {
             drive.updatePoseEstimate();
             Pose2d currentPose = drive.localizer.getPose();
 
-            boolean running = plan != null && plan.run(p);;
+            boolean running = plan != null && plan.run(p);
 
             telemetry1.addData("Track width", params.inPerTick * params.trackWidthTicks);
             telemetry1.addData("Ticks per inch", 1.0/params.inPerTick);
