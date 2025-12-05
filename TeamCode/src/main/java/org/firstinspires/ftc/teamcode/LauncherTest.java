@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp
 public class LauncherTest  extends LinearOpMode {
@@ -23,7 +26,48 @@ public class LauncherTest  extends LinearOpMode {
         boolean is_up_pressed = false;
         boolean is_down_pressed = false;
 
+        long lastMilliSeconds = System.nanoTime();
+        int lastTicks = leftDrive.getCurrentPosition();
+        int lastRightTicks = rightDrive.getCurrentPosition();
+        float accum = 0;
+        int accumTicks = 0;
+        int rightAccumTicks = 0;
+        int ticksPerSecond = 0;
+        int rightTicksPerSecond = 0;
+        long frameNumber = 0;
+
         while (opModeIsActive()) {
+            frameNumber++;
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry telemetry = dashboard.getTelemetry();
+
+            long currentMilliSeconds = System.nanoTime();
+            long elapsedMillis = currentMilliSeconds - lastMilliSeconds;
+            float elapsedSeconds = elapsedMillis * 0.000000001f;
+            lastMilliSeconds = currentMilliSeconds;
+
+            int currentTicks = leftDrive.getCurrentPosition();
+            int rightCurrentTicks = rightDrive.getCurrentPosition();
+
+            accumTicks += currentTicks - lastTicks;
+            rightAccumTicks += rightCurrentTicks - lastRightTicks;
+            lastTicks = currentTicks;
+            lastRightTicks = rightCurrentTicks;
+
+            accum += elapsedSeconds;
+
+            if(accum >= 1)
+            {
+                ticksPerSecond = accumTicks;
+                rightTicksPerSecond = rightAccumTicks;
+                accumTicks = 0;
+                rightAccumTicks = 0;
+                accum = accum - 1;
+            }
+
+            telemetry.addData("Frame critical time in seconds", accum);
+            telemetry.addData("Left ticks per second", Math.abs(ticksPerSecond));
+            telemetry.addData("Right ticks per second", Math.abs(rightTicksPerSecond));
             telemetry.addData("Power level", leftPower);
 
             leftDrive.setPower(leftPower);

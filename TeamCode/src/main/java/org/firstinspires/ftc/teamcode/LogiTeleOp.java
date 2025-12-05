@@ -30,12 +30,12 @@ public class LogiTeleOp extends LinearOpMode {
         Action drivePlan = null;
         boolean snapTurning = false;
         while (opModeIsActive()) {
-
             PinpointLocalizer ppl = (PinpointLocalizer) drive.localizer;
             TelemetryPacket p = new TelemetryPacket();
             drive.updatePoseEstimate();
             Pose2d pose = drive.localizer.getPose();
             boolean driveRunning = drivePlan != null && drivePlan.run(p);
+            telemetry.addData("Is Running", driveRunning);
 
             //Drive with L and R
             if (!driveRunning){
@@ -47,12 +47,8 @@ public class LogiTeleOp extends LinearOpMode {
                         -gamepad1.right_stick_x
                 ));
             }
-            drive.updatePoseEstimate();
-            //Snap to turning
-
 
             drivePlan = gamePadOneLoop(driveRunning, drive, pose, drivePlan);
-
 
             telemetry.addData("x", pose.position.x);
             telemetry.addData("y", pose.position.y);
@@ -69,34 +65,36 @@ public class LogiTeleOp extends LinearOpMode {
     private Action gamePadOneLoop(boolean isRunning, MecanumDrive drive, Pose2d pose, Action drivePlan){
         if (!isRunning) {
             if (gamepad1.dpad_right) {
-                drivePlan = drive.actionBuilder(pose)
-                        .turnTo(Math.toDegrees(90))
+               return drive.actionBuilder(pose)
+                        .turnTo(Math.toDegrees(-90))
                         .build();
             } else if(gamepad1.dpad_down){
-                drivePlan = drive.actionBuilder(pose)
+                return drive.actionBuilder(pose)
                         .turnTo(Math.toDegrees(180))
                         .build();
             } else if(gamepad1.dpad_left){
-                drivePlan = drive.actionBuilder(pose)
-                        .turnTo(Math.toDegrees(270))
+                return drive.actionBuilder(pose)
+                        .turnTo(Math.toDegrees(90))
                         .build();
             } else if(gamepad1.dpad_up) {
-                drivePlan = drive.actionBuilder(pose)
+                return drive.actionBuilder(pose)
                         .turnTo(Math.toDegrees(0))
                         .build();
             } else if(gamepad1.a) {
-                drivePlan = drive.actionBuilder(pose).build();
+                return drivePlan;
             } else if (gamepad1.b) {
-                drivePlan = drive.actionBuilder(pose).build();
+                return drivePlan;
             } else if (gamepad1.x) {
-                drivePlan = drive.actionBuilder(pose).build();
+                return drivePlan;
             } else if (gamepad1.y){
-                drivePlan = drive.actionBuilder(pose).build();
+                return drivePlan;
             }
-            return drivePlan;
-
+            else
+            {
+                return drivePlan;
+            }
         } else {
-            return null;
+            return drivePlan;
         }
     }
 }
