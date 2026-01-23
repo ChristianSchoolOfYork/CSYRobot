@@ -13,7 +13,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -32,20 +34,26 @@ public class LogiTeleOp extends LinearOpMode {
         return Math.sqrt(range * range - elevation * elevation);
     }
 
-    private VisionPortal visionPortal;
-    private AprilTagProcessor aprilTag;
-
     public void runOpMode(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        aprilTag = new AprilTagProcessor.Builder().build();
+        //TODO:Update this with values when camera installed
+        final Position CAMERA_LOCATION = new Position(DistanceUnit.INCH,0,0,0,0);
+        final YawPitchRollAngles CAMERA_ANGLES = new YawPitchRollAngles(AngleUnit.DEGREES,0,0,0,0);
+        AprilTagProcessor aprilTag = new AprilTagProcessor.Builder().setCameraPose(CAMERA_LOCATION,CAMERA_ANGLES).build();
+
         VisionPortal.Builder builder = new VisionPortal.Builder();
         builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
         builder.addProcessor(aprilTag);
-        //builder.setCameraResolution(new Size(1280, 720)); // Commented out bc AprilTag data recognition library is not very accurate with this resolution
-        visionPortal = builder.build();
+        VisionPortal visionPortal = builder.build();
         FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
+
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         double lastRepos = time;
+        Pose2d pose = new Pose2d(60,-60,0);
+        if (!aprilTag.getDetections().isEmpty()) {
+            pose = Locationator.getPose(aprilTag);
+        }
+
         waitForStart();
 
         Action drivePlan = null;
@@ -54,7 +62,6 @@ public class LogiTeleOp extends LinearOpMode {
             PinpointLocalizer ppl = (PinpointLocalizer) drive.localizer;
             TelemetryPacket p = new TelemetryPacket();
             drive.updatePoseEstimate();
-            Pose2d pose = drive.localizer.getPose();
             boolean driveRunning = drivePlan != null && drivePlan.run(p);
             telemetry.addData("Is Running", driveRunning);
             //Drive with L and R
@@ -101,9 +108,9 @@ public class LogiTeleOp extends LinearOpMode {
 //                }
 //            }
             double timeSinceRepos = time - lastRepos;
-            if (lastRepos > 5 && !driveRunning && !aprilTag.getDetections().isEmpty()){
-                Position position = Locationator.getPose(aprilTag, packet).getPosition().x;
-                pose = new Pose2d(position.x,position.y,)
+            if (timeSinceRepos > 5 && !driveRunning && !aprilTag.getDetections().isEmpty()){
+                pose = Locationator.getPose(aprilTag, packet);
+                lastRepos = time;
             }
             packet.fieldOverlay().setStroke("#3F51B5");
             Drawing.drawRobot(packet.fieldOverlay(), pose);
@@ -130,7 +137,7 @@ public class LogiTeleOp extends LinearOpMode {
                         .turnTo(Math.toDegrees(0))
                         .build();
             } else if(gamepad1.a) {
-                return drivePlan;
+                return drive.actionBuilder(pose).setTangent(0).splineToConstantHeading(new Vector2d(39,-39),0).build();
             } else if (gamepad1.b) {
                 return drivePlan;
             } else if (gamepad1.x) {

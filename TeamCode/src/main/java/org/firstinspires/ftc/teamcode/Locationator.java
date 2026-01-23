@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
@@ -22,13 +24,13 @@ import java.util.List;
 public class Locationator extends LinearOpMode {
     private Object math_output;
     //Placement Calculation Function
-
-    public static double Placement_Calc(double range, double elevation) {
-        if (!(range >= elevation)) {
-            throw new IllegalArgumentException("Range must be ≥ Elevation");
-        }
-        return Math.sqrt(range * range - elevation * elevation);
-    }
+//
+//    public static double Placement_Calc(double range, double elevation) {
+//        if (!(range >= elevation)) {
+//            throw new IllegalArgumentException("Range must be ≥ Elevation");
+//        }
+//        return Math.sqrt(range * range - elevation * elevation);
+//    }
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTag;
     @Override
@@ -40,6 +42,7 @@ public class Locationator extends LinearOpMode {
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
         FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
+
         waitForStart();
         while (opModeIsActive()){
             TelemetryPacket packet = new TelemetryPacket();
@@ -57,19 +60,34 @@ public class Locationator extends LinearOpMode {
     }
 
 
+    public static Pose2d getPose(AprilTagProcessor tag) {
+        List<AprilTagDetection> currentDetections = checkPosTag(tag.getDetections());
+        if (!currentDetections.isEmpty()) {
+            AprilTagPoseFtc pos = null;
+            pos = checkPosTag(currentDetections).get(0).ftcPose;
 
-    public static Pose3D getPose(AprilTagProcessor tag, TelemetryPacket packet) {
+            assert pos != null;
+            return new Pose2d(pos.x, pos.y, pos.yaw);
+        }
+        else return null;
+
+    }
+
+    public static Pose2d getPose(AprilTagProcessor tag, TelemetryPacket packet) {
         List<AprilTagDetection> currentDetections = checkPosTag(tag.getDetections());
         packet.put("# AprilTags Detected", currentDetections.size());
 
-        Pose3D pos = null;
+        AprilTagPoseFtc pos = null;
+
         for (AprilTagDetection detection : checkPosTag(currentDetections)) {
-            pos = detection.robotPose;
-            packet.addLine(String.format("X: %f Y: %f Z:%f", pos.getPosition().x, pos.getPosition().y, pos.getPosition().z));
+            pos = detection.ftcPose;
+            packet.addLine(String.format("X: %f Y: %f Yaw:%f", pos.x, pos.y, pos.yaw));
         }
+
         packet.fieldOverlay().setStroke("#3F51B5");
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
-        return pos;
+        assert pos != null;
+        return new Pose2d(pos.x,pos.y, pos.yaw);
 
     }
 
