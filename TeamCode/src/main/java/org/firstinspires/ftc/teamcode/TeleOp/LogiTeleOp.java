@@ -24,7 +24,6 @@ import java.util.List;
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Logicool Teleop")
 public class LogiTeleOp extends LinearOpMode {
-    private List<Action>
 
     public void runOpMode(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
