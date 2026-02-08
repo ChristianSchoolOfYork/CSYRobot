@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -28,6 +29,7 @@ public class AllianceSelector {
         // Confirm choice
         telemetry.addData("Selected Alliance: ", currentAlliance == 0 ? "Red" : "Blue");
         telemetry.update();
+        OpMode.blackboard.put("alliance", currentAlliance == 0);
 
         return currentAlliance;
     }
