@@ -5,8 +5,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.HelperClasses.AngleServos;
-import org.firstinspires.ftc.teamcode.HelperClasses.Launcher;
+import AngleServos;
+import org.firstinspires.ftc.teamcode.HelperClasses.Launcher.Launcher;
 
 public class Launchpad {
     Gamepad gamepad2;

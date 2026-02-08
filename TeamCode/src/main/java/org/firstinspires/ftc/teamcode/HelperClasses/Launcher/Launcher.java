@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.HelperClasses;
+package org.firstinspires.ftc.teamcode.HelperClasses.Launcher;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Launcher {
-    final private Servo turnServo, angleServoLeft, angleServoRight, intakeServo;
-    final private DcMotor intakeMotor, launcherMotor;
+    final protected Servo turnServo, angleServoLeft, angleServoRight, intakeServo;
+    final protected DcMotorEx intakeMotor, launcherMotor;
     boolean intakeArmLoaded;
 
     public Launcher(HardwareMap hardwareMap){
@@ -14,8 +15,8 @@ public class Launcher {
         angleServoLeft = hardwareMap.get(Servo.class, "angleServoLeft");
         angleServoRight = hardwareMap.get(Servo.class, "angleServoRight");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
-        launcherMotor = hardwareMap.get(DcMotor.class, "launcherMotor");
+        intakeMotor = (DcMotorEx) hardwareMap.get(DcMotor.class,"intakeMotor");
+        launcherMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "launcherMotor");
         intakeArmLoaded = false;
 
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -104,5 +105,4 @@ public class Launcher {
         turnLauncher(0.5);
     }
     //=============================================================
-
 }

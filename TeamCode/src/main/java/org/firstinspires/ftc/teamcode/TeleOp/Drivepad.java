@@ -7,7 +7,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.HelperClasses.MecanumDrive;
+import org.firstinspires.ftc.teamcode.HelperClasses.Driving.MecanumDrive;
 
 public class Drivepad {
     Gamepad gamepad1;

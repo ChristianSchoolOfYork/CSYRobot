@@ -8,7 +8,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -16,30 +15,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.HelperClasses.Launcher;
-import org.firstinspires.ftc.teamcode.HelperClasses.Locationator;
-import org.firstinspires.ftc.teamcode.HelperClasses.MecanumDrive;
+import org.firstinspires.ftc.teamcode.HelperClasses.Camera.LogiCamera;
+import org.firstinspires.ftc.teamcode.HelperClasses.Launcher.Launcher;
+import org.firstinspires.ftc.teamcode.HelperClasses.Camera.Locationator;
+import org.firstinspires.ftc.teamcode.HelperClasses.Driving.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "Logicool Teleop")
+@TeleOp(name = "Logicool Teleop",group = "Logicool")
 public class LogiTeleOp extends LinearOpMode {
 
     public void runOpMode(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        //TODO:Update this with values when camera installed
-        //Locationator setup
-        final Position CAMERA_LOCATION = new Position(DistanceUnit.INCH,0,0,0,0);
-        final YawPitchRollAngles CAMERA_ANGLES = new YawPitchRollAngles(AngleUnit.DEGREES,0,0,0,0);
-        AprilTagProcessor aprilTag = new AprilTagProcessor.Builder().setCameraPose(CAMERA_LOCATION,CAMERA_ANGLES).build();
 
-        //Camera Setup
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        builder.addProcessor(aprilTag);
-        VisionPortal visionPortal = builder.build();
-        FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
+        AprilTagProcessor aprilTag = LogiCamera.initCamera(hardwareMap);
 
         //Drive Setup
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
@@ -64,7 +54,7 @@ public class LogiTeleOp extends LinearOpMode {
             //Create this loop's telemetry packet
             TelemetryPacket p = new TelemetryPacket();
 
-            //update the pose and check for if there is an action going on
+            //update the pose
             drive.updatePoseEstimate();
 
 
@@ -74,7 +64,6 @@ public class LogiTeleOp extends LinearOpMode {
             launchpad.launchLoop(p, telemetry);
 
             telemetry.addData("Is Running", drivepad.driveRunning);
-            //telemetry send
             telemetry.addData("x", pose.position.x);
             telemetry.addData("y", pose.position.y);
             telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));

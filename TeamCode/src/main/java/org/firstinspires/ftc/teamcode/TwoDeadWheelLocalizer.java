@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.HelperClasses.Localizer;
+import org.firstinspires.ftc.teamcode.HelperClasses.Driving.Localizer;
 import org.firstinspires.ftc.teamcode.messages.TwoDeadWheelInputsMessage;
 
 @Config

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HelperClasses;
+package org.firstinspires.ftc.teamcode.HelperClasses.Camera;
 
 import android.annotation.SuppressLint;
 

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.HelperClasses.Localizer;
+import org.firstinspires.ftc.teamcode.HelperClasses.Driving.Localizer;
 
 @Config
 public class OTOSLocalizer implements Localizer {

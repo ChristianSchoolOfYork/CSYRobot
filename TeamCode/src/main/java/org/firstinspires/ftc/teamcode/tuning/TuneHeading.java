@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.HelperClasses.MecanumDrive;
-import org.firstinspires.ftc.teamcode.HelperClasses.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.HelperClasses.Driving.MecanumDrive;
+import org.firstinspires.ftc.teamcode.HelperClasses.Driving.PinpointLocalizer;
 
 @SuppressWarnings("unused")
 @TeleOp
