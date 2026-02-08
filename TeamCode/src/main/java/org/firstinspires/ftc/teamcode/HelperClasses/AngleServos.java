@@ -2,29 +2,30 @@ package org.firstinspires.ftc.teamcode.HelperClasses;
 
 public class AngleServos {
     private final Launcher launcher;
-    private double targetAngle;
+    private double targetSpeed;
 
     public AngleServos(Launcher launcher){
         this.launcher = launcher;
-
-        //TODO Update This If Servos Are Flipped
-        targetAngle = launcher.getAngleLeft();
+        targetSpeed = 0.5;
     }
 
-    /**Increases the target angle by {@code angleIncrease}
+    /**Increases the target speed by {@code angleIncrease}
      * @param angleIncrease The amount to increase the target angle by
      */
-    public void updateTargetAngle(double angleIncrease){
-        targetAngle = Math.max(0, Math.min(1, targetAngle + angleIncrease));
+    public void updateTargetSpeed(double angleIncrease, boolean execute){
+        targetSpeed = Math.max(0, Math.min(1, targetSpeed + angleIncrease));
+        if (execute){
+            updateSpeed();
+        }
     }
 
-    public double getTargetAngle(){
-        return targetAngle;
+    public double getTargetSpeed(){
+        return targetSpeed;
     }
 
-    public void updateAngle(){
-        launcher.angleLeft(targetAngle);
-        launcher.angleRight(targetAngle);
+    public void updateSpeed(){
+        launcher.turnAngleLeft(targetSpeed);
+        launcher.turnAngleRight(targetSpeed);
     }
 
 }

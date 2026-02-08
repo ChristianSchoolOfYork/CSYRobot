@@ -3,14 +3,11 @@ package org.firstinspires.ftc.teamcode.HelperClasses;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
-
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.commands.ServoCommands;
 
 public class Launcher {
     final private Servo turnServo, angleServoLeft, angleServoRight, intakeServo;
     final private DcMotor intakeMotor, launcherMotor;
-    boolean intakeStage;
+    boolean intakeArmLoaded;
 
     public Launcher(HardwareMap hardwareMap){
         turnServo = hardwareMap.get(Servo.class,"turnServo");
@@ -19,7 +16,7 @@ public class Launcher {
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
         intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
         launcherMotor = hardwareMap.get(DcMotor.class, "launcherMotor");
-        intakeStage = false;
+        intakeArmLoaded = false;
 
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -28,59 +25,84 @@ public class Launcher {
         angleServoLeft.setDirection(Servo.Direction.FORWARD);
     }
 
-    //Launcher related classes
-    public void launch(double power){
+
+    //=============================================================
+    //Launcher  classes
+    public void runLauncher(double power){
         launcherMotor.setPower(power);
     }
-    public void launch(){
-        launcherMotor.setPower(1);
+    public void runLauncher(){
+        launcherMotor.setPower(0.5);
     }
-    public void stopLaunch(){
+    public void stopLauncher(){
         launcherMotor.setPower(0);
     }
+    //=============================================================
 
-    //Intake Classes
-    public boolean getLaunchStage(){
-        return intakeStage;
+    //=============================================================
+    //Ball Transit classes
+    public boolean isIntakeArmLoaded(){
+        return intakeArmLoaded;
     }
+    public void toggleArm(){
+        final double min = 0,max = 1;
+        intakeServo.setPosition(intakeArmLoaded ? max : min);
+        intakeArmLoaded = !intakeArmLoaded;
+    }
+    //=============================================================
+
+    //=============================================================
+    //Intake Classes
     public void runIntake(double power){
         intakeMotor.setPower(power);
     }
-    public void nextLaunchStage(){
-        final double min = 0,max = 1;
-        intakeServo.setPosition(intakeStage? max : min);
-        intakeStage = !intakeStage;
+    public double intakePower(){
+        return intakeMotor.getPower();
     }
+    //=============================================================
 
+    //=============================================================
     //debug classes
-    public void setIntakeServo(double pos){
+    public void turnIntakeServo(double pos){
         intakeServo.setPosition(pos);
     }
-
     public double getIntakeServoPos(){
         return intakeServo.getPosition();
     }
+    //=============================================================
 
-    //Launch angle classes (private because they are to be accessed through the angle servos class anywhere else, as a pair
+    //=============================================================
+    //Launch angle classes
     public double getAngleRight(){
         return angleServoRight.getPosition();
     }
-
-    protected void angleRight(double position){
+    protected void turnAngleRight(double position){
         angleServoRight.setPosition(position);
     }
-
-    public double getAngleLeft(){
+    public double getAngleLeft() {
         return angleServoLeft.getPosition();
     }
-    protected void angleLeft(double position){
+    protected void turnAngleLeft(double position){
         angleServoLeft.setPosition(position);
     }
+    //=============================================================
 
+    //=============================================================
     //Launcher Rotation Classes
-    public void rotateLauncher(double positonUpdate){
-        //Sets position to the current position + the new position, with bounds at 0 and 1
-        turnServo.setPosition(Math.max(0, Math.min(1,turnServo.getPosition() + positonUpdate)));
+    public void turnLauncher(double speed){
+        //Sets speed the new speed, with bounds at 0 and 1
+        turnServo.setPosition(Math.max(0, Math.min(1, speed)));
     }
+    //=============================================================
+
+    //=============================================================
+    //Other classes
+    public void emergencyStop(AngleServos angleServos) {
+        stopLauncher();
+        runIntake(0);
+        angleServos.updateTargetSpeed(0.5,true);
+        turnLauncher(0.5);
+    }
+    //=============================================================
 
 }

@@ -8,12 +8,15 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Drawing;
+import org.firstinspires.ftc.teamcode.HelperClasses.Launcher;
 import org.firstinspires.ftc.teamcode.HelperClasses.Locationator;
 import org.firstinspires.ftc.teamcode.HelperClasses.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -46,11 +49,15 @@ public class LogiTeleOp extends LinearOpMode {
             pose = Locationator.getPose(aprilTag);
         }
 
-        //Gamepad setup
-        Drivepad game = new Drivepad(gamepad1,drive);
+        //Launcher Setup
+        Launcher launcher = new Launcher(hardwareMap);
 
+        //Gamepad setup
+        Drivepad drivepad = new Drivepad(gamepad1,drive);
+        Launchpad launchpad = new Launchpad(gamepad2, launcher, FtcDashboard.getInstance());
         waitForStart();
 
+        launcher.runLauncher();
         Action drivePlan = null;
         boolean snapTurning = false;
         while (opModeIsActive()) {
@@ -62,9 +69,11 @@ public class LogiTeleOp extends LinearOpMode {
 
 
             //Update from driver gamepad
-            drivePlan = game.loop(pose, drivePlan,p);
+            drivePlan = drivepad.loop(pose, drivePlan, p);
 
-            telemetry.addData("Is Running", game.driveRunning);
+            launchpad.launchLoop(p, telemetry);
+
+            telemetry.addData("Is Running", drivepad.driveRunning);
             //telemetry send
             telemetry.addData("x", pose.position.x);
             telemetry.addData("y", pose.position.y);
@@ -74,7 +83,7 @@ public class LogiTeleOp extends LinearOpMode {
 
             //If it has been more than 5 seconds since we last did it, and robot can see an april tag with location data, update the pose more accurately
             double timeSinceRepos = time - lastRepos;
-            if (timeSinceRepos > 5 && !game.driveRunning && !aprilTag.getDetections().isEmpty()){
+            if (timeSinceRepos > 5 && !drivepad.driveRunning && !aprilTag.getDetections().isEmpty()){
                 pose = Locationator.getPose(aprilTag, packet);
                 lastRepos = time;
             }
