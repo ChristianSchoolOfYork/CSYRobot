@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 @SuppressLint("DefaultLocale")
 @SuppressWarnings("unused")
+@Disabled
 @TeleOp(name = "Camera Locationator")
 public class Locationator extends LinearOpMode {
     private Object math_output;

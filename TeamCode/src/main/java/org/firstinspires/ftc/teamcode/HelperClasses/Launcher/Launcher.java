@@ -33,7 +33,7 @@ public class Launcher {
         launcherMotor.setPower(power);
     }
     public void runLauncher(){
-        launcherMotor.setPower(.75);
+        launcherMotor.setPower(.35);
     }
     public void stopLauncher(){
         launcherMotor.setPower(0);
@@ -45,11 +45,6 @@ public class Launcher {
     //Ball Transit classes
     public boolean isIntakeArmLoaded(){
         return intakeArmLoaded;
-    }
-    public void toggleArm(){
-        final double min = 0.4,max = 0.68;
-        intakeServo.setPosition(intakeArmLoaded ? max : min);
-        intakeArmLoaded = !intakeArmLoaded;
     }
     public void holdBall(){
         intakeServo.setPosition(0.55);
@@ -107,7 +102,6 @@ public class Launcher {
         stopLauncher();
         runIntake(0);
         //turnLauncher(0.5);
-
     }
     public void emergencyStart(){
         runLauncher(0.35);

@@ -33,7 +33,7 @@ public class LogiTeleOp extends LinearOpMode {
 
         //Drive Setup
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        double lastRepos = time;
+        double lastRepos = getRuntime();
         Pose2d pose = new Pose2d(60,-60,0);
         if (!aprilTag.getDetections().isEmpty()) {
             pose = Locationator.getPose(aprilTag);
@@ -73,10 +73,10 @@ public class LogiTeleOp extends LinearOpMode {
             TelemetryPacket packet = new TelemetryPacket();
 
             //If it has been more than 5 seconds since we last did it, and robot can see an april tag with location data, update the pose more accurately
-            double timeSinceRepos = time - lastRepos;
+            double timeSinceRepos = getRuntime() - lastRepos;
             if (timeSinceRepos > 5 && !drivepad.driveRunning && !aprilTag.getDetections().isEmpty()){
                 pose = Locationator.getPose(aprilTag, packet);
-                lastRepos = time;
+                lastRepos = getRuntime();
             }
 
             //Update Dashboard, not useful in competition

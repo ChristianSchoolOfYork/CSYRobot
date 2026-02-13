@@ -20,7 +20,6 @@ public class Launchpad {
         this.launcher = launcher;
         this.dash = dash;
         emergencyStop = false;
-        incArm = 0.08;
     }
 
     public void launchLoop(TelemetryPacket p, Telemetry telemetry){
@@ -47,19 +46,13 @@ public class Launchpad {
                 } else if (gamepad2.dpadDownWasPressed()) {
                     launcher.runLauncher(Math.max(0, Math.min(0.75, launcher.launcherPower() - INC_LAUNCHER)));
                 }
-            }else if (gamepad2.x) {
+            } else {
                 if (gamepad2.dpadUpWasPressed()) {
                     launcher.turnIntakeServo(0.68);
                 } else if (gamepad2.dpadDownWasPressed()) {
                     launcher.turnIntakeServo(0.4);
                 } else if (gamepad2.dpadLeftWasPressed() || gamepad2.dpadRightWasPressed()){
                     launcher.holdBall();
-                }
-            } else if (gamepad2.start){
-                if (gamepad2.dpadUpWasPressed()) {
-                    incArm *= 2;
-                } else if (gamepad2.dpadDownWasPressed()) {
-                    incArm /= 2;
                 }
             }
             if(gamepad2.bWasPressed()){
