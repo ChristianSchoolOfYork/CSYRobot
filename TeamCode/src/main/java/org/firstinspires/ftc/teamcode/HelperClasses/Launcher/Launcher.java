@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Launcher {
-    final protected Servo turnServo, angleServoLeft, angleServoRight, intakeServo;
+    final protected Servo turnServo=null, angleServoLeft=null, angleServoRight=null, intakeServo;
     final protected DcMotorEx intakeMotor, launcherMotor;
     boolean intakeArmLoaded;
 
     public Launcher(HardwareMap hardwareMap){
-        turnServo = hardwareMap.get(Servo.class,"turnServo");
-        angleServoLeft = hardwareMap.get(Servo.class, "angleServoLeft");
-        angleServoRight = hardwareMap.get(Servo.class, "angleServoRight");
+        //turnServo = hardwareMap.get(Servo.class,"turnServo");
+        //angleServoLeft = hardwareMap.get(Servo.class, "angleServoLeft");
+        //angleServoRight = hardwareMap.get(Servo.class, "angleServoRight");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
         intakeMotor = (DcMotorEx) hardwareMap.get(DcMotor.class,"intakeMotor");
         launcherMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "launcherMotor");
@@ -22,8 +22,8 @@ public class Launcher {
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        angleServoRight.setDirection(Servo.Direction.REVERSE);
-        angleServoLeft.setDirection(Servo.Direction.FORWARD);
+        //angleServoRight.setDirection(Servo.Direction.REVERSE);
+        //angleServoLeft.setDirection(Servo.Direction.FORWARD);
     }
 
 
@@ -33,11 +33,12 @@ public class Launcher {
         launcherMotor.setPower(power);
     }
     public void runLauncher(){
-        launcherMotor.setPower(0.5);
+        launcherMotor.setPower(.75);
     }
     public void stopLauncher(){
         launcherMotor.setPower(0);
     }
+    public double launcherPower(){return launcherMotor.getPower();}
     //=============================================================
 
     //=============================================================
@@ -46,9 +47,12 @@ public class Launcher {
         return intakeArmLoaded;
     }
     public void toggleArm(){
-        final double min = 0,max = 1;
+        final double min = 0.4,max = 0.68;
         intakeServo.setPosition(intakeArmLoaded ? max : min);
         intakeArmLoaded = !intakeArmLoaded;
+    }
+    public void holdBall(){
+        intakeServo.setPosition(0.55);
     }
     //=============================================================
 
@@ -74,35 +78,41 @@ public class Launcher {
 
     //=============================================================
     //Launch angle classes
-    public double getAngleRight(){
-        return angleServoRight.getPosition();
-    }
-    protected void turnAngleRight(double position){
-        angleServoRight.setPosition(position);
-    }
-    public double getAngleLeft() {
-        return angleServoLeft.getPosition();
-    }
-    protected void turnAngleLeft(double position){
-        angleServoLeft.setPosition(position);
-    }
+//    public double getAngleRight(){
+//        return angleServoRight.getPosition();
+//    }
+//    protected void turnAngleRight(double position){
+//        angleServoRight.setPosition(position);
+//    }
+//    public double getAngleLeft() {
+//        return angleServoLeft.getPosition();
+//    }
+//    protected void turnAngleLeft(double position){
+//        angleServoLeft.setPosition(position);
+//    }
     //=============================================================
 
     //=============================================================
     //Launcher Rotation Classes
-    public void turnLauncher(double speed){
-        //Sets speed the new speed, with bounds at 0 and 1
-        turnServo.setPosition(Math.max(0, Math.min(1, speed)));
-    }
+//    public void turnLauncher(double speed){
+//        //Sets speed the new speed, with bounds at 0 and 1
+//        turnServo.setPosition(Math.max(0, Math.min(1, speed)));
+//    }
     //=============================================================
 
     //=============================================================
     //Other classes
-    public void emergencyStop(AngleServos angleServos) {
+    public void emergencyStop() {
+        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         stopLauncher();
         runIntake(0);
-        angleServos.updateTargetSpeed(0.5,true);
-        turnLauncher(0.5);
+        //turnLauncher(0.5);
+
+    }
+    public void emergencyStart(){
+        runLauncher(0.35);
+        runIntake(1);
+        turnIntakeServo(0.4);
     }
     //=============================================================
 }

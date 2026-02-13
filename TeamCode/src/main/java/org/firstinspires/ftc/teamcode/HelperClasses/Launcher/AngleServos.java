@@ -12,20 +12,20 @@ public class AngleServos {
     /**Increases the target speed by {@code angleIncrease}
      * @param angleIncrease The amount to increase the target angle by
      */
-    public void updateTargetSpeed(double angleIncrease, boolean execute){
-        targetSpeed = Math.max(0, Math.min(1, targetSpeed + angleIncrease));
-        if (execute){
-            updateSpeed();
-        }
-    }
-
-    public double getTargetSpeed(){
-        return targetSpeed;
-    }
-
-    public void updateSpeed(){
-        launcher.turnAngleLeft(targetSpeed);
-        launcher.turnAngleRight(targetSpeed);
-    }
+//    public void updateTargetSpeed(double angleIncrease, boolean execute){
+//        targetSpeed = Math.max(0, Math.min(1, targetSpeed + angleIncrease));
+//        if (execute){
+//            updateSpeed();
+//        }
+//    }
+//
+//    public double getTargetSpeed(){
+//        return targetSpeed;
+//    }
+//
+//    public void updateSpeed(){
+//        launcher.turnAngleLeft(targetSpeed);
+//        launcher.turnAngleRight(targetSpeed);
+//    }
 
 }

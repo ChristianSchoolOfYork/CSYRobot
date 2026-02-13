@@ -47,7 +47,7 @@ public class LogiTeleOp extends LinearOpMode {
         Launchpad launchpad = new Launchpad(gamepad2, launcher, FtcDashboard.getInstance());
         waitForStart();
 
-        launcher.runLauncher();
+
         Action drivePlan = null;
         boolean snapTurning = false;
         while (opModeIsActive()) {
@@ -67,6 +67,8 @@ public class LogiTeleOp extends LinearOpMode {
             telemetry.addData("x", pose.position.x);
             telemetry.addData("y", pose.position.y);
             telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
+            telemetry.addData("Left X: ", gamepad1.left_stick_x);
+            telemetry.addData("left Y: ", gamepad1.left_stick_y);
             telemetry.update();
             TelemetryPacket packet = new TelemetryPacket();
 
@@ -82,5 +84,6 @@ public class LogiTeleOp extends LinearOpMode {
             Drawing.drawRobot(packet.fieldOverlay(), pose);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
         }
+        launcher.emergencyStop();
     }
 }

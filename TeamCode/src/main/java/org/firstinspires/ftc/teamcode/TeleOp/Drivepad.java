@@ -45,7 +45,7 @@ public class Drivepad {
             } else if (gamepad1.y){
                 return drivePlan;
             } else{
-                drive.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
+                drive.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, gamepad1.left_stick_x), gamepad1.right_stick_x));
                 return drivePlan;
             }
         } else {
